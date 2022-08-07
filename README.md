@@ -1,1 +1,1 @@
-# Simple GraphQL server on Rust #
+# Simple GraphQL server on Rust without ORM #
