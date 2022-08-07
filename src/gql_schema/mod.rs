@@ -1,7 +1,6 @@
 mod graphql;
 mod graphql_fields;
 
-use std::sync::Arc;
 use async_graphql::{Schema, SchemaBuilder, EmptySubscription};
 use sqlx::PgPool;
 use crate::gql_schema::graphql::{Mutation, Query};

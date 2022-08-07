@@ -6,20 +6,15 @@ use crate::gql_schema;
 use crate::data_base::connection::create_connection_pool;
 
 pub(super) async fn make_routes() -> BoxedFilter<(impl Reply,)>{
-    //Build the GraphQL gql_schema
     let schema = gql_schema::build_schema(create_connection_pool().await).finish();
 
     let graphql_handler = warp::post()
         .and(warp::path("graphql"))
         .and(warp::header::optional::<String>("Authorization"))
         .and(async_graphql_warp::graphql(schema))
-        .and_then( |auth: Option<String>, (schema, request): (Schema<_,_,_>, Request)| async move {
-            // Do something to get auth data from the header
+        .and_then( |_auth: Option<String>, (schema, request): (Schema<_,_,_>, Request)| async move {
             let response = schema
-                .execute(
-                    request
-                        //.data(helps::get_user(create_connection_pool(), auth.unwrap_or_default()).await)
-                ).await;
+                .execute(request).await;
 
             Ok::<_, Infallible>(async_graphql_warp::GraphQLResponse::from(response))
         });
